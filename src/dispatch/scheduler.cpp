@@ -1,17 +1,17 @@
 #include "dispatch/scheduler.hpp"
 
-#include "app/cli.hpp"
-
 #include <cctype>
 #include <stdexcept>
 
 namespace dispatch {
 namespace {
 
-bool valid_sku(const std::string& sku) {
-    return !sku.empty() &&
-           std::isspace(static_cast<unsigned char>(sku.front())) == 0 &&
-           std::isspace(static_cast<unsigned char>(sku.back())) == 0;
+bool is_space(char ch) {
+    return std::isspace(static_cast<unsigned char>(ch)) != 0;
+}
+
+bool valid_token(const std::string& text) {
+    return !text.empty() && !is_space(text.front()) && !is_space(text.back());
 }
 
 }  // namespace
@@ -26,10 +26,10 @@ Scheduler::Scheduler(warehouse::Inventory& inventory,
 }
 
 DispatchDecision Scheduler::submit(const warehouse::Order& order) {
-    if (!app::valid_order_id(order.id)) {
+    if (!valid_token(order.id)) {
         return {false, order.id, "", "invalid order id"};
     }
-    if (!valid_sku(order.sku)) {
+    if (!valid_token(order.sku)) {
         return {false, order.id, "", "invalid sku"};
     }
     if (order.quantity <= 0) {
@@ -63,11 +63,11 @@ std::vector<DispatchDecision> Scheduler::submit_all(
 bool Scheduler::complete(const std::string& station_id,
                          const std::string& order_id,
                          std::string& failure_reason) {
-    if (!app::valid_station_id(station_id)) {
+    if (!valid_token(station_id)) {
         failure_reason = "invalid station id";
         return false;
     }
-    if (!app::valid_order_id(order_id)) {
+    if (!valid_token(order_id)) {
         failure_reason = "invalid order id";
         return false;
     }

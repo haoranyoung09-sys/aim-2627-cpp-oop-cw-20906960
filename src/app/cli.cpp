@@ -1,3 +1,4 @@
+#include "app/application.hpp"
 #include "app/cli.hpp"
 
 #include <cctype>

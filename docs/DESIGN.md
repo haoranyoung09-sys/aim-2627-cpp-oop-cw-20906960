@@ -11,6 +11,8 @@
 | `audit` | `include/audit/trace.hpp`<br>`src/audit/trace.cpp` | `TraceEvent`、`Trace` | 按发生顺序记录成功事件（`DISPATCH O S`、`COMPLETE O S`），提供 `append`、`events`、`clear`；不校验业务规则，不依赖调度器。 |
 | `app` | `include/app/cli.hpp`<br>`include/app/application.hpp`<br>`include/app/contracts.hpp`<br>`src/app/cli.cpp`<br>`src/app/main.cpp` | `normalize_sku`、`valid_station_id`、`valid_order_id`、`run`、`print_trace` | 负责 SKU 规范化（去首尾空白并转大写）、ID 合法性校验（拒绝空串和首尾空白）及 CLI 入口；不直接修改库存或机器人状态。 |
 
+单向依赖关系：`app` / `core_demo` / `warehouse_dispatcher` → `dispatch` → `{warehouse, audit}`，其中 `warehouse` 与 `audit` 均不反向依赖调度层、`app` 层或 ROS 2。
+
 ## 策略差异对比
 
 两种调度策略均继承 `dispatch::DispatchPolicy`，在不修改 `Scheduler` 代码的前提下通过 `dispatch::make_policy(name)` 切换：
