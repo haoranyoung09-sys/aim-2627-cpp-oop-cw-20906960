@@ -48,4 +48,19 @@ git show --stat HEAD -- .agent-sessions/
 
 ## AI 使用与开发过程（你来写）
 
-声明是否使用 AI；如使用，说明工具、帮助范围、哪些建议未采用、如何验证结果，并说明 `.agent-sessions/bundles/` 中的归档位置。未使用则明确声明并提供可核对的开发记录；记录不完整时如实说明原因。
+本作业在开发过程中使用 Antigravity（AI 编程助手）辅助阅读题面规格、实现核心库、定位 Q4 缺陷、补充边界验证并撰写交接文档。
+
+- **使用范围**：
+  - Q1：`src/warehouse/domain.cpp`、`src/dispatch/policy.cpp`、`src/dispatch/scheduler.cpp`、`src/audit/trace.cpp`、`src/app/cli.cpp` 的核心逻辑实现与边界校验；
+  - Q4：`src/debug/main.cpp` 中 `LegacyDispatcher::submit` 事务顺序缺陷定位与修复；
+  - Q5：`docs/README.md`、`docs/DESIGN.md` 文档编写与本地编译测试核对。
+- **未采用或受限说明**：
+  - `ros2_ws/` 在模板中已提供完整节点接入框架且不在 CI 白名单修改范围内，因此保持原样未修改；
+  - 本机为 Windows 环境（使用 MinGW `g++ 8.1.0` 以 `-std=c++17 -Wall -Wextra -Wpedantic` 编译验证），未在本地安装 `cmake` 或 Ubuntu 24.04 + ROS 2 Jazzy，ROS 2 运行时闭环将由推送后的远程流程或 ROS 2 环境进一步验证。
+- **结果验证**：
+  - `public_tests` 输出 `PUBLIC 2/2`；`core_demo` 正常退出；
+  - `debug_task` 修复前实测输出 `S1 no -1 yes 0`，修复后实测输出 `S1 no 5 yes 0`；
+  - `python tools/validate_structure.py` 输出 `Structure OK`；
+  - 独立边界测试覆盖零库存、负库存、非法 ID/SKU/数量、重复注册、平局策略、忙碌跳过、重复/错误完成，全部通过。
+- **会话归档位置**：
+  - 仓库已配置 `agent-session-commit` v0.1.5（`custom` agent 模式，源目录 `.agent-sessions/source/`），每次 `git commit` 后由 `post-commit` hook 自动打包并随提交保存至 `.agent-sessions/bundles/`。
