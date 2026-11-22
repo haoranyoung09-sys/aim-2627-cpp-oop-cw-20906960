@@ -28,13 +28,16 @@ public:
     }
 
     Decision submit(const std::string& order_id, int quantity) {
+        if (quantity <= 0) {
+            return {false, "", "invalid quantity"};
+        }
         for (auto& item : stock_) {
             const std::string& station_id = item.first;
             if (!busy_[station_id]) {
-                item.second -= quantity;
-                if (item.second < 0) {
+                if (item.second < quantity) {
                     return {false, "", "insufficient stock"};
                 }
+                item.second -= quantity;
                 busy_[station_id] = true;
                 orders_[station_id] = order_id;
                 return {true, station_id, "accepted"};
