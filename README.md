@@ -48,11 +48,11 @@ git show --stat HEAD -- .agent-sessions/
 
 ## AI 使用与开发过程（你来写）
 
-本作业在开发过程中使用 Antigravity（AI 编程助手）辅助阅读题面规格、实现核心库、定位 Q4 缺陷、补充边界验证并撰写交接文档。
+本作业在开发过程中使用 Antigravity（AI 编程助手）辅助阅读题面规格、定位 Q4 缺陷、补充边界验证。
 
 - **使用范围**：
-  - Q1：`src/warehouse/domain.cpp`、`src/dispatch/policy.cpp`、`src/dispatch/scheduler.cpp`、`src/audit/trace.cpp`、`src/app/cli.cpp` 的核心逻辑实现与边界校验；
-  - Q4：`src/debug/main.cpp` 中 `LegacyDispatcher::submit` 事务顺序缺陷定位与修复；
+  - Q1：`src/warehouse/domain.cpp`、`src/dispatch/policy.cpp`、`src/dispatch/scheduler.cpp`、`src/audit/trace.cpp`、`src/app/cli.cpp` 的边界校验；
+  - Q4：`src/debug/main.cpp` 中 `LegacyDispatcher::submit` 修复；
   - Q5：`docs/README.md`、`docs/DESIGN.md` 文档编写与本地编译测试核对。
 - **未采用或受限说明**：
   - `ros2_ws/` 在模板中已提供完整节点接入框架且不在 CI 白名单修改范围内，因此保持原样未修改；
